@@ -168,8 +168,9 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<template ref="inputBox">
-							<textarea v-if="currentField && currentField.moneyConfig"
+						<template >
+							<textarea v-show="isMoney"
+									  ref="moneyInputBox"
 									  v-money="currentField.moneyConfig"
 									  class="input-box"
 									  :style="{opacity: inputBoxShow}"
@@ -182,7 +183,7 @@
 									  autocompitaize="off"
 									  :spellcheck="spellcheck"></textarea>
 
-							<textarea v-else
+							<textarea v-show="!isMoney" ref="inputBox"
 									  class="input-box"
 									  :style="{opacity: inputBoxShow}"
 									  @blur="inputBoxBlur"
@@ -537,7 +538,9 @@ export default {
 			summaryRow: false,
 			summary: {},
 			showFilteredOnly: true,
-			showSelectedOnly: false
+			showSelectedOnly: false,
+
+			isMoney: false
 		}
 		return dataset
 	},
@@ -627,6 +630,17 @@ export default {
 		},
 		pageSize(newVal) {
 			this.$emit('page-changed', this.pageTop, this.pageTop + newVal - 1)
+		},
+		currentField(newVal) {
+			if (newVal.type === 'money') {
+				this.isMoney = true
+				this.inputBox = this.$refs.moneyInputBox
+			} else {
+				this.isMoney = false
+				this.inputBox = this.$refs.inputBox
+			}
+			this.$forceUpdate()
+
 		}
 	},
 	beforeDestroy() {

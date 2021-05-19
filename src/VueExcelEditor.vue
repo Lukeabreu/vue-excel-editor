@@ -171,7 +171,7 @@
 						<template >
 							<textarea v-show="isMoney"
 									  ref="moneyInputBox"
-									  v-money="currentField.moneyConfig"
+									  v-money="moneyConfig"
 									  class="input-box"
 									  :style="{opacity: inputBoxShow}"
 									  @blur="inputBoxBlur"
@@ -540,7 +540,14 @@ export default {
 			showFilteredOnly: true,
 			showSelectedOnly: false,
 
-			isMoney: false
+			isMoney: false,
+			moneyConfig: {
+				decimal: ',',
+				thousands: '.',
+				prefix: '$ ',
+				precision: 2,
+				masked: false
+			}
 		}
 		return dataset
 	},
@@ -635,6 +642,8 @@ export default {
 			if (newVal.type === 'money') {
 				this.isMoney = true
 				this.inputBox = this.$refs.moneyInputBox
+				if(newVal.moneyConfig)
+					this.moneyConfig = newVal.moneyConfig
 			} else {
 				this.isMoney = false
 				this.inputBox = this.$refs.inputBox

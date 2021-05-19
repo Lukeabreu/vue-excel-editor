@@ -166,7 +166,6 @@
 						<div class="rb-square"/>
 						<textarea ref="inputBox"
 								  class="input-box"
-								  v-model="currentText"
 								  :style="{opacity: inputBoxShow}"
 								  @input="inputBoxEvent"
 								  @blur="inputBoxBlur"
@@ -2393,9 +2392,9 @@ export default {
 				this.updateCell(recPos, field, field.toValue(setText))
 		},
 		inputBoxEvent($event) {
-			if (this.currentField.type === 'money') {
+			if(this.currentField.type === 'money') {
 				let el = $event.target
-				let opt = this.currentField.moneyConfig ? this.currentField.moneyConfig : options
+				let opt = options
 				let positionFromEnd = el.value.length - el.selectionEnd
 				el.value = format(el.value, opt)
 				positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right

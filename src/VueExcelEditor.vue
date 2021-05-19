@@ -130,7 +130,7 @@
 								:style="Object.assign(cellStyle(record, item), renderColumnCellStyle(item))"
 								:key="p"
 								@mouseover="cellMouseOver"
-								@mousemove="cellMouseMove">{{ item.toText(formatText(record[item.name]), item) }}
+								@mousemove="cellMouseMove">{{ item.toText(formatText(record[item.name], item)) }}
 							</td>
 						</template>
 						<td v-if="vScroller.buttonHeight < vScroller.height" class="last-col"></td>

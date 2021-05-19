@@ -168,7 +168,22 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<textarea  v-if="currentField && currentField.moneyConfig"
+						<textarea v-show="!isMoney"
+								  ref="inputBox"
+								  id="inputBox"
+								  class="input-box"
+								  :style="{opacity: inputBoxShow}"
+								  @blur="inputBoxBlur"
+								  @mousemove="inputBoxMouseMove"
+								  @mousedown="inputBoxMouseDown"
+								  trim
+								  autocomplete="off"
+								  autocorrect="off"
+								  autocompitaize="off"
+								  :spellcheck="spellcheck"></textarea>
+
+
+						<textarea  v-show="isMoney"
 								   ref="moneyInputBox"
 								   id="moneyInputBox"
 								   v-money="currentField.moneyConfig"
@@ -182,19 +197,6 @@
 								   autocorrect="off"
 								   autocompitaize="off"
 								   :spellcheck="spellcheck"></textarea>
-						<textarea v-else
-								  ref="inputBox"
-								  id="inputBox"
-								  class="input-box"
-								  :style="{opacity: inputBoxShow}"
-								  @blur="inputBoxBlur"
-								  @mousemove="inputBoxMouseMove"
-								  @mousedown="inputBoxMouseDown"
-								  trim
-								  autocomplete="off"
-								  autocorrect="off"
-								  autocompitaize="off"
-								  :spellcheck="spellcheck"></textarea>
 
 					</div>
 				</div>
@@ -538,7 +540,9 @@ export default {
 			summaryRow: false,
 			summary: {},
 			showFilteredOnly: true,
-			showSelectedOnly: false
+			showSelectedOnly: false,
+
+			isMoney: false
 		}
 		return dataset
 	},
@@ -630,7 +634,14 @@ export default {
 			this.$emit('page-changed', this.pageTop, this.pageTop + newVal - 1)
 		},
 		currentField(newVal) {
-			this.inputBox = newVal.type === 'money' ? this.$refs.moneyInputBox : this.$refs.inputBox
+			if(newVal.type === 'money') {
+				this.isMoney = true
+				this.inputBox = this.$refs.moneyInputBox
+			} else {
+				this.isMoney = false
+				this.inputBox = this.$refs.inputBox
+			}
+
 		}
 	},
 	beforeDestroy() {

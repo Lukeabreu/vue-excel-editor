@@ -2391,11 +2391,14 @@ export default {
 		},
 		inputSquareClick() {
 			if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
-				this.inputBox.value = this.currentCell.textContent.trim()
-				this.inputBoxShow = 1
-				this.inputBox.focus()
-				this.inputBoxChanged = false
-				this.focused = true
+				this.$nextTick(() => {
+					this.inputBox.value = this.currentCell.textContent
+					this.inputBoxShow = 1
+					this.inputBox.focus()
+					this.inputBoxChanged = false
+					this.focused = true
+				})
+
 			}
 		},
 		inputBoxMouseMove(e) {

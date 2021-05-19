@@ -164,34 +164,18 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<template>
-							<textarea v-if="isMoney"
-									  ref="moneyInputBox"
-									  v-money="moneyConfig"
-									  class="input-box"
-									  :style="{opacity: inputBoxShow}"
-									  @blur="inputBoxBlur"
-									  @mousemove="inputBoxMouseMove"
-									  @mousedown="inputBoxMouseDown"
-									  trim
-									  autocomplete="off"
-									  autocorrect="off"
-									  autocompitaize="off"
-									  :spellcheck="spellcheck"></textarea>
-
-							<textarea v-else
-									  ref="inputBox"
-									  class="input-box"
-									  :style="{opacity: inputBoxShow}"
-									  @blur="inputBoxBlur"
-									  @mousemove="inputBoxMouseMove"
-									  @mousedown="inputBoxMouseDown"
-									  trim
-									  autocomplete="off"
-									  autocorrect="off"
-									  autocompitaize="off"
-									  :spellcheck="spellcheck"></textarea>
-						</template>
+						<textarea ref="inputBox"
+								  class="input-box"
+								  v-model="currentText"
+								  :style="{opacity: inputBoxShow}"
+								  @blur="inputBoxBlur"
+								  @mousemove="inputBoxMouseMove"
+								  @mousedown="inputBoxMouseDown"
+								  trim
+								  autocomplete="off"
+								  autocorrect="off"
+								  autocompitaize="off"
+								  :spellcheck="spellcheck"></textarea>
 
 					</div>
 				</div>
@@ -492,7 +476,6 @@ export default {
 			currentField: null,           // focusing field object
 			currentCell: null,
 			inputBox: null,
-			moneyInputBox: null,
 			inputBoxShow: 0,
 			inputSquare: null,
 			autocompleteInputs: [],
@@ -538,14 +521,7 @@ export default {
 			showFilteredOnly: true,
 			showSelectedOnly: false,
 
-			isMoney: false,
-			moneyConfig: {
-				decimal: ',',
-				thousands: '.',
-				prefix: '$ ',
-				precision: 2,
-				masked: false
-			}
+			currentText: ''
 		}
 		return dataset
 	},
@@ -655,7 +631,6 @@ export default {
 		this.footer = this.$refs.footer
 		this.inputSquare = this.$refs.inputSquare
 		this.inputBox = this.$refs.inputBox
-		this.moneyInputBox = this.$refs.moneyInputBox
 		this.frontdrop = this.$refs.frontdrop
 
 		if (this.height)
@@ -2295,14 +2270,6 @@ export default {
      */
 		moveInputSquare(rowPos, colPos) {
 			if (colPos < 0) return false
-
-			if(this.fields[colPos].type === 'money') {
-				this.isMoney = true
-				this.inputBox =  this.$refs.moneyInputBox
-			} else {
-				this.isMoney = false
-				this.inputBox = this.$refs.inputBox
-			}
 
 			const top = this.pageTop
 			let row = this.recordBody.children[rowPos]

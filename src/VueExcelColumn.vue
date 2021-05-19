@@ -44,12 +44,15 @@ export default {
 		summary: {type: String, default: null},
 		sort: {type: Function, default: null},
 		moneyConfig: {
-			type: Object, default: {
-				decimal: ',',
-				thousands: '.',
-				prefix: '',
-				precision: 2,
-				masked: false
+			type: Object,
+			default() {
+				return {
+					decimal: ',',
+					thousands: '.',
+					prefix: '',
+					precision: 2,
+					masked: false
+				}
 			}
 		},
 		toValue: {

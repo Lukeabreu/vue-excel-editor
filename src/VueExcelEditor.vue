@@ -2373,11 +2373,8 @@ export default {
 		inputSquareClick() {
 			if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
 
-				if(this.currentField.type === 'money' || this.currentField.type === 'quantity') {
-					this.hasMoney = true
-					this.moneyConfig = this.currentField.moneyConfig
-				}
-
+				this.hasMoney = (this.currentField.type === 'money' || this.currentField.type === 'quantity')
+				this.moneyConfig = this.currentField.moneyConfig
 				this.inputBox.value = this.currentCell.textContent
 				this.inputBoxShow = 1
 				this.inputBox.focus()

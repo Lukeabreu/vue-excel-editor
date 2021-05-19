@@ -668,7 +668,7 @@ export default {
 			}
 		},
 		formatText(text, field) {
-			return field.type === 'money' ? format(text, field.moneyConfig) : field
+			return field.type === 'money' ? format(text, field.moneyConfig) : text
 		},
 		reset() {
 			this.errmsg = {}

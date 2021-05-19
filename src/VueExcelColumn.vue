@@ -191,7 +191,7 @@ export default {
 					break
 				case 'select':
 					break
-				case 'string':
+				case 'string': case 'custom':
 					break
 				default:
 					throw new Error('VueExcelColumn: Not supported type:' + this.type)

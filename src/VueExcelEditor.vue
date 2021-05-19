@@ -168,6 +168,7 @@
 								  class="input-box"
 								  v-model="currentText"
 								  :style="{opacity: inputBoxShow}"
+								  @input="inputBoxEvent"
 								  @blur="inputBoxBlur"
 								  @mousemove="inputBoxMouseMove"
 								  @mousedown="inputBoxMouseDown"
@@ -318,6 +319,8 @@ import DatePicker from 'vue2-datepicker'
 import XLSX from 'xlsx'
 
 import 'vue2-datepicker/index.css'
+import {format, setCursor, event} from './utils'
+import options from './options'
 
 export default {
 	components: {
@@ -2388,6 +2391,22 @@ export default {
 				this.updateSelectedRows(field, field.toValue(setText))
 			else
 				this.updateCell(recPos, field, field.toValue(setText))
+		},
+		inputBoxEvent($event) {
+			if (this.currentField.type === 'money') {
+				let el = $event.target
+				let opt = this.currentField.moneyConfig ? this.currentField.moneyConfig : options
+				let positionFromEnd = el.value.length - el.selectionEnd
+				el.value = format(el.value, opt)
+				positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
+				positionFromEnd = el.value.length - positionFromEnd
+				positionFromEnd = Math.max(positionFromEnd, opt.prefix.length + 1) // left
+				setCursor(el, positionFromEnd)
+				el.dispatchEvent(event('change')) // v-model.lazy
+			}
+
+			this.$emit('text-input', $event)
+
 		},
 		inputBoxBlur() {
 			if (!this.$refs.dpContainer) return

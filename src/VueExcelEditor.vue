@@ -70,7 +70,7 @@
                   :style="{top: calCellTop2 + 'px'}"
                   @click="columnFilter = {}">
                 <span v-if="Object.keys(columnFilter).length > 0">
-                  <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eraser" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-eraser fa-w-16 fa-sm"><path fill="currentColor" d="M497.941 273.941c18.745-18.745 18.745-49.137 0-67.882l-160-160c-18.745-18.745-49.136-18.746-67.883 0l-256 256c-18.745 18.745-18.745 49.137 0 67.882l96 96A48.004 48.004 0 0 0 144 480h356c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12H355.883l142.058-142.059zm-302.627-62.627l137.373 137.373L265.373 416H150.628l-80-80 124.686-124.686z"></path></svg>                  
+                  <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eraser" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-eraser fa-w-16 fa-sm"><path fill="currentColor" d="M497.941 273.941c18.745-18.745 18.745-49.137 0-67.882l-160-160c-18.745-18.745-49.136-18.746-67.883 0l-256 256c-18.745 18.745-18.745 49.137 0 67.882l96 96A48.004 48.004 0 0 0 144 480h356c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12H355.883l142.058-142.059zm-302.627-62.627l137.373 137.373L265.373 416H150.628l-80-80 124.686-124.686z"></path></svg>
                 </span>
                 <!--
                 <svg v-if="selectedCount==table.length" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-sm"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg>
@@ -155,18 +155,35 @@
         <div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
           <div style="position: relative; height: 100%; padding: 2px 2px 1px">
             <div class="rb-square" />
-            <textarea ref="inputBox"
-                      id="inputBox"
-                      class="input-box"
-                      :style="{opacity: inputBoxShow}"
-                      @blur="inputBoxBlur"
-                      @mousemove="inputBoxMouseMove"
-                      @mousedown="inputBoxMouseDown"
-                      trim
-                      autocomplete="off"
-                      autocorrect="off"
-                      autocompitaize="off"
-                      :spellcheck="spellcheck"></textarea>
+
+			  <template v-if="currentField.type === 'quantity' || currentField.type === 'money'">
+				              <textarea ref="inputBox"
+										v-money="currentField.moneyConfig"
+										class="input-box"
+										:style="{opacity: inputBoxShow}"
+										@blur="inputBoxBlur"
+										@mousemove="inputBoxMouseMove"
+										@mousedown="inputBoxMouseDown"
+										trim
+										autocomplete="off"
+										autocorrect="off"
+										autocompitaize="off"
+										:spellcheck="spellcheck"></textarea>
+			  </template>
+			  <template v-else>
+				              <textarea ref="inputBox"
+										class="input-box"
+										:style="{opacity: inputBoxShow}"
+										@blur="inputBoxBlur"
+										@mousemove="inputBoxMouseMove"
+										@mousedown="inputBoxMouseDown"
+										trim
+										autocomplete="off"
+										autocorrect="off"
+										autocompitaize="off"
+										:spellcheck="spellcheck"></textarea>
+			  </template>
+
           </div>
         </div>
 
@@ -692,7 +709,7 @@ export default {
         register: null
       }
       if (this.addColumn) colDef = this.addColumn(colDef)
-      this.newColumn(colDef, pos)      
+      this.newColumn(colDef, pos)
     },
     newColumn (field, pos) {
       this.fields.splice(pos, 0, field)
@@ -735,7 +752,7 @@ export default {
           toText: t => t,
           register: null
         })
-      })        
+      })
     },
     refresh () {
       // this.pageTop = 0
@@ -901,7 +918,7 @@ export default {
     },
     localeDate (d) {
       if (typeof d === 'undefined') d = new Date()
-      const pad = n => n < 10 ? '0'+n : n;    
+      const pad = n => n < 10 ? '0'+n : n;
       return d.getFullYear() + '-'
             + pad(d.getMonth() + 1) + '-'
             + pad(d.getDate()) + ' '
@@ -987,7 +1004,7 @@ export default {
       ref.$el.textContent = filterText
       ref.$emit('input', filterText)
     },
-    
+
     clearFilter(name) {
       if (!name) this.columnFilter = {}
       else this.setFilter(name, '')
@@ -1738,7 +1755,7 @@ export default {
     },
 
     settingClick() {
-      if (!this.disablePanelSetting) 
+      if (!this.disablePanelSetting)
         this.$refs.panelSetting.showPanel();
     },
 
@@ -1753,7 +1770,7 @@ export default {
       this.$refs.importFile.click()
       this.importCallback = cb
       this.importErrorCallback = errCb
-    },   
+    },
     doImport (e) {
       this.processing = true
       // this.refresh()
@@ -1803,8 +1820,8 @@ export default {
                 if (keys.length) {
                   // locate match record
                   rowPos = this.table.findIndex(v =>
-                    keys.filter(f => 
-                      typeof v[f.name] !== 'undefined' 
+                    keys.filter(f =>
+                      typeof v[f.name] !== 'undefined'
                       && (v[f.name] === line[f.name] || v[f.name] === line[f.label])).length === keys.length
                   )
                   if (rowPos === -1) {
@@ -1907,7 +1924,7 @@ export default {
           throw new Error('VueExcelEditor: ' + e.stack)
         }
         fileReader.readAsBinaryString(file)
-      }, 500)      
+      }, 500)
     },
     exportTable (format, selectedOnly, filename) {
       this.processing = true
@@ -2028,7 +2045,7 @@ export default {
       }
     },
     selectRecordByKeys (keys) {
-      const rowPos = this.table.findIndex(v => 
+      const rowPos = this.table.findIndex(v =>
         this.fields.filter(f => f.keyField).filter(f => v[f.name] === keys[f.name]).length === keys.length)
       if (rowPos >= 0) this.selectRecord(rowPos)
     },
@@ -2514,7 +2531,7 @@ export default {
           if (selector) selector.classList.add('error')
         }
         else
-        if (this.errmsg[id]) {          
+        if (this.errmsg[id]) {
           delete this.errmsg[id]
           const selector = this.systable.querySelector('td#'+id)
           if (selector) selector.classList.remove('error')

@@ -214,7 +214,7 @@ export default {
 				change: this.change,
 				link: this.link,
 				sort: this.sort,
-
+				moneyConfig: this.moneyConfig,
 				keyField: this.keyField,
 				sticky: this.sticky,
 				allowKeys: allowKeys,

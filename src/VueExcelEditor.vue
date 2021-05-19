@@ -168,9 +168,9 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<template v-if="moneyConfig">
+						<template v-if="currentField && currentField.moneyConfig">
 				              <textarea ref="inputBox"
-										v-money="moneyConfig"
+										v-money="currentField.moneyConfig"
 										class="input-box"
 										:style="{opacity: inputBoxShow}"
 										@blur="inputBoxBlur"
@@ -538,10 +538,7 @@ export default {
 			summaryRow: false,
 			summary: {},
 			showFilteredOnly: true,
-			showSelectedOnly: false,
-
-			hasMoney: false,
-			moneyConfig: {}
+			showSelectedOnly: false
 		}
 		return dataset
 	},
@@ -2372,9 +2369,6 @@ export default {
 		},
 		inputSquareClick() {
 			if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
-
-				this.moneyConfig = this.currentField.moneyConfig
-
 				this.inputBox.value = this.currentCell.textContent
 				this.inputBoxShow = 1
 				this.inputBox.focus()

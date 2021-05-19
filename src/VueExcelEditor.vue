@@ -2392,7 +2392,7 @@ export default {
 		inputSquareClick() {
 			if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
 				this.$nextTick(() => {
-					this.inputBox.value = this.currentCell.textContent
+					this.inputBox.value = this.currentCell.textContent.trim()
 					this.inputBoxShow = 1
 					this.inputBox.focus()
 					this.inputBoxChanged = false

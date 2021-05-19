@@ -2399,16 +2399,14 @@ export default {
 		inputBoxEvent($event) {
 			if(this.currentField.type === 'money') {
 				let el = $event.target
-				this.$nextTick(() => {
-					let opt = this.currentField.moneyConfig ? this.currentField.moneyConfig : this.moneyConfigDefault
-					let positionFromEnd = el.value.length - el.selectionEnd
-					el.value = format(el.value, opt)
-					positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
-					positionFromEnd = el.value.length - positionFromEnd
-					positionFromEnd = Math.max(positionFromEnd, opt.prefix.length + 1) // left
-					setCursor(el, positionFromEnd)
-					el.dispatchEvent(event('change'))
-				})
+				let opt = this.currentField.moneyConfig ? this.currentField.moneyConfig : this.moneyConfigDefault
+				let positionFromEnd = el.value.length - el.selectionEnd
+				el.value = format(el.value, opt)
+				positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
+				positionFromEnd = el.value.length - positionFromEnd
+				positionFromEnd = Math.max(positionFromEnd, opt.prefix.length + 1) // left
+				setCursor(el, positionFromEnd)
+				el.dispatchEvent(event('change'))
 			}
 
 			this.$emit('text-input', $event)

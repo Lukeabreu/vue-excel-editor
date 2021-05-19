@@ -318,7 +318,7 @@ import DatePicker from 'vue2-datepicker'
 import XLSX from 'xlsx'
 
 import 'vue2-datepicker/index.css'
-import {format, setCursor, event} from './utils'
+import {format, setCursor, event, unformat} from './utils'
 
 export default {
 	components: {
@@ -2554,7 +2554,7 @@ export default {
 					name: field.name,
 					field: field,
 					oldVal: typeof oldVal !== 'undefined' ? oldVal : '',
-					newVal: newVal,
+					newVal: field.type === 'money' ? unformat(newVal) :newVal,
 					err: ''
 				}
 

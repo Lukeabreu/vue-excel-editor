@@ -168,7 +168,7 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<template >
+						<template v-if="hasMoney">
 				              <textarea ref="inputBox"
 										v-money="moneyConfig"
 										class="input-box"

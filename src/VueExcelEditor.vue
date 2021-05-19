@@ -168,35 +168,35 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<textarea v-show="!isMoney"
-								  ref="inputBox"
-								  id="inputBox"
-								  class="input-box"
-								  :style="{opacity: inputBoxShow}"
-								  @blur="inputBoxBlur"
-								  @mousemove="inputBoxMouseMove"
-								  @mousedown="inputBoxMouseDown"
-								  trim
-								  autocomplete="off"
-								  autocorrect="off"
-								  autocompitaize="off"
-								  :spellcheck="spellcheck"></textarea>
-
-
-						<textarea  v-show="isMoney"
-								   ref="moneyInputBox"
-								   id="moneyInputBox"
-								   v-money="currentField.moneyConfig"
-								   class="input-box"
-								   :style="{opacity: inputBoxShow}"
-								   @blur="inputBoxBlur"
-								   @mousemove="inputBoxMouseMove"
-								   @mousedown="inputBoxMouseDown"
-								   trim
-								   autocomplete="off"
-								   autocorrect="off"
-								   autocompitaize="off"
-								   :spellcheck="spellcheck"></textarea>
+						<template v-if="currentField && currentField.moneyConfig">
+				              <textarea ref="inputBox"
+										id="moneyInputBox"
+										v-money="currentField.moneyConfig"
+										class="input-box"
+										:style="{opacity: inputBoxShow}"
+										@blur="inputBoxBlur"
+										@mousemove="inputBoxMouseMove"
+										@mousedown="inputBoxMouseDown"
+										trim
+										autocomplete="off"
+										autocorrect="off"
+										autocompitaize="off"
+										:spellcheck="spellcheck"></textarea>
+						</template>
+						<template v-else>
+				              <textarea ref="inputBox"
+										id="inputBox"
+										class="input-box"
+										:style="{opacity: inputBoxShow}"
+										@blur="inputBoxBlur"
+										@mousemove="inputBoxMouseMove"
+										@mousedown="inputBoxMouseDown"
+										trim
+										autocomplete="off"
+										autocorrect="off"
+										autocompitaize="off"
+										:spellcheck="spellcheck"></textarea>
+						</template>
 
 					</div>
 				</div>
@@ -540,9 +540,7 @@ export default {
 			summaryRow: false,
 			summary: {},
 			showFilteredOnly: true,
-			showSelectedOnly: false,
-
-			isMoney: false
+			showSelectedOnly: false
 		}
 		return dataset
 	},
@@ -632,16 +630,6 @@ export default {
 		},
 		pageSize(newVal) {
 			this.$emit('page-changed', this.pageTop, this.pageTop + newVal - 1)
-		},
-		currentField(newVal) {
-			if(newVal.type === 'money') {
-				this.isMoney = true
-				this.inputBox = this.$refs.moneyInputBox
-			} else {
-				this.isMoney = false
-				this.inputBox = this.$refs.inputBox
-			}
-
 		}
 	},
 	beforeDestroy() {
@@ -2383,7 +2371,7 @@ export default {
 		},
 		inputSquareClick() {
 			if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
-				this.inputBox.value = this.currentCell.textContent
+				this.inputBox.value = this.currentCell.textContent.trim()
 				this.inputBoxShow = 1
 				this.inputBox.focus()
 				this.inputBoxChanged = false

@@ -168,8 +168,9 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<template v-if="currentField && currentField.moneyConfig">
+						<template v-if="currentField && currentField.moneyConfig !== null">
 				              <textarea ref="inputBox"
+										id="moneyInputBox"
 										v-money="currentField.moneyConfig"
 										class="input-box"
 										:style="{opacity: inputBoxShow}"
@@ -184,6 +185,7 @@
 						</template>
 						<template v-else>
 				              <textarea ref="inputBox"
+										id="inputBox"
 										class="input-box"
 										:style="{opacity: inputBoxShow}"
 										@blur="inputBoxBlur"

@@ -183,7 +183,6 @@
 									  :spellcheck="spellcheck"></textarea>
 
 							<textarea v-else
-									  v-money="currentField.moneyConfig"
 									  class="input-box"
 									  :style="{opacity: inputBoxShow}"
 									  @blur="inputBoxBlur"

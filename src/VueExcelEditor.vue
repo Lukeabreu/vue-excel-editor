@@ -168,34 +168,32 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<template v-if="currentField && currentField.moneyConfig">
-				              <textarea ref="inputBox"
-										id="moneyInputBox"
-										v-money="currentField.moneyConfig"
-										class="input-box"
-										:style="{opacity: inputBoxShow}"
-										@blur="inputBoxBlur"
-										@mousemove="inputBoxMouseMove"
-										@mousedown="inputBoxMouseDown"
-										trim
-										autocomplete="off"
-										autocorrect="off"
-										autocompitaize="off"
-										:spellcheck="spellcheck"></textarea>
-						</template>
-						<template v-else>
-				              <textarea ref="inputBox"
-										id="inputBox"
-										class="input-box"
-										:style="{opacity: inputBoxShow}"
-										@blur="inputBoxBlur"
-										@mousemove="inputBoxMouseMove"
-										@mousedown="inputBoxMouseDown"
-										trim
-										autocomplete="off"
-										autocorrect="off"
-										autocompitaize="off"
-										:spellcheck="spellcheck"></textarea>
+						<template ref="inputBox">
+							<textarea v-if="currentField && currentField.moneyConfig"
+									  v-money="currentField.moneyConfig"
+									  class="input-box"
+									  :style="{opacity: inputBoxShow}"
+									  @blur="inputBoxBlur"
+									  @mousemove="inputBoxMouseMove"
+									  @mousedown="inputBoxMouseDown"
+									  trim
+									  autocomplete="off"
+									  autocorrect="off"
+									  autocompitaize="off"
+									  :spellcheck="spellcheck"></textarea>
+
+							<textarea v-else
+									  v-money="currentField.moneyConfig"
+									  class="input-box"
+									  :style="{opacity: inputBoxShow}"
+									  @blur="inputBoxBlur"
+									  @mousemove="inputBoxMouseMove"
+									  @mousedown="inputBoxMouseDown"
+									  trim
+									  autocomplete="off"
+									  autocorrect="off"
+									  autocompitaize="off"
+									  :spellcheck="spellcheck"></textarea>
 						</template>
 
 					</div>
@@ -2371,7 +2369,7 @@ export default {
 		},
 		inputSquareClick() {
 			if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
-				this.inputBox.value = this.currentCell.textContent.trim()
+				this.inputBox.value = this.currentCell.textContent
 				this.inputBoxShow = 1
 				this.inputBox.focus()
 				this.inputBoxChanged = false

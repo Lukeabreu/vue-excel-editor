@@ -110,10 +110,7 @@
 						:style="rowStyle(record)">
 						<td class="center-text first-col"
 							:id="`rid-${record.$id}`"
-							:class="{
-                    hide: noNumCol,
-                    error: rowerr[`rid-${record.$id}`]
-                  }"
+							:class="{ hide: noNumCol, error: rowerr[`rid-${record.$id}`] }"
 							:pos="rowPos"
 							@mouseover="numcolMouseOver"
 							@click="rowLabelClick">
@@ -123,14 +120,13 @@
 							<td v-show="!item.invisible"
 								:id="`id-${record.$id}-${item.name}`"
 								:cell-RC="`${rowPos}-${item.name}`"
-								:class="{
-                      readonly: item.readonly,
-                      error: errmsg[`id-${record.$id}-${item.name}`],
-                      link: item.link,
-                      select: item.options,
-                      datepick: item.type == 'date',
-                      'sticky-column': item.sticky
-                    }"
+								:class="{ readonly: item.readonly,
+										 error: errmsg[`id-${record.$id}-${item.name}`],
+										 link: item.link,
+										 select: item.options,
+										 datepick: item.type == 'date',
+										 'sticky-column': item.sticky
+										}"
 								:style="Object.assign(cellStyle(record, item), renderColumnCellStyle(item))"
 								:key="p"
 								@mouseover="cellMouseOver"
@@ -148,10 +144,10 @@
 								class="row-summary"
 								:colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2: 1"
 								:class="{
-                      'sticky-column': field.sticky,
-                      'summary-column1': p+1 < fields.length && fields[p+1].summary,
-                      'summary-column2': field.summary
-                    }"
+											'sticky-column': field.sticky,
+											'summary-column1': p+1 < fields.length && fields[p+1].summary,
+											'summary-column2': field.summary
+										}"
 								:style="renderColumnCellStyle(field)"
 								:key="`f${p}`">{{ summary[field.name] }}
 							</td>
@@ -168,7 +164,7 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<template >
+						<template>
 							<textarea v-show="isMoney"
 									  ref="moneyInputBox"
 									  v-money="moneyConfig"
@@ -183,7 +179,8 @@
 									  autocompitaize="off"
 									  :spellcheck="spellcheck"></textarea>
 
-							<textarea v-show="!isMoney" ref="inputBox"
+							<textarea v-show="!isMoney"
+									  ref="inputBox"
 									  class="input-box"
 									  :style="{opacity: inputBoxShow}"
 									  @blur="inputBoxBlur"
@@ -495,6 +492,7 @@ export default {
 			currentField: null,           // focusing field object
 			currentCell: null,
 			inputBox: null,
+			moneyInputBox: null,
 			inputBoxShow: 0,
 			inputSquare: null,
 			autocompleteInputs: [],
@@ -637,19 +635,6 @@ export default {
 		},
 		pageSize(newVal) {
 			this.$emit('page-changed', this.pageTop, this.pageTop + newVal - 1)
-		},
-		currentField(newVal) {
-			if (newVal.type === 'money') {
-				this.isMoney = true
-				this.inputBox = this.$refs.moneyInputBox
-				if(newVal.moneyConfig)
-					this.moneyConfig = newVal.moneyConfig
-			} else {
-				this.isMoney = false
-				this.inputBox = this.$refs.inputBox
-			}
-			this.$forceUpdate()
-
 		}
 	},
 	beforeDestroy() {
@@ -670,6 +655,7 @@ export default {
 		this.footer = this.$refs.footer
 		this.inputSquare = this.$refs.inputSquare
 		this.inputBox = this.$refs.inputBox
+		this.moneyInputBox = this.$refs.moneyInputBox
 		this.frontdrop = this.$refs.frontdrop
 
 		if (this.height)
@@ -2309,6 +2295,15 @@ export default {
      */
 		moveInputSquare(rowPos, colPos) {
 			if (colPos < 0) return false
+
+			if(this.fields[colPos].type === 'money') {
+				this.isMoney = true
+				this.inputBox =  this.$refs.moneyInputBox
+			} else {
+				this.isMoney = false
+				this.inputBox = this.$refs.inputBox
+			}
+
 			const top = this.pageTop
 			let row = this.recordBody.children[rowPos]
 			if (!row) {
@@ -2391,14 +2386,11 @@ export default {
 		},
 		inputSquareClick() {
 			if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
-				this.$nextTick(() => {
-					this.inputBox.value = this.currentCell.textContent.trim()
-					this.inputBoxShow = 1
-					this.inputBox.focus()
-					this.inputBoxChanged = false
-					this.focused = true
-				})
-
+				this.inputBox.value = this.currentCell.textContent.trim()
+				this.inputBoxShow = 1
+				this.inputBox.focus()
+				this.inputBoxChanged = false
+				this.focused = true
 			}
 		},
 		inputBoxMouseMove(e) {

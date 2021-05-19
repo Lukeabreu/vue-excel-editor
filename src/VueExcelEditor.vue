@@ -521,9 +521,7 @@ export default {
 			summaryRow: false,
 			summary: {},
 			showFilteredOnly: true,
-			showSelectedOnly: false,
-
-			currentText: ''
+			showSelectedOnly: false
 		}
 		return dataset
 	},

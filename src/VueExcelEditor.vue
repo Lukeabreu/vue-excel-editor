@@ -130,7 +130,7 @@
 								:style="Object.assign(cellStyle(record, item), renderColumnCellStyle(item))"
 								:key="p"
 								@mouseover="cellMouseOver"
-								@mousemove="cellMouseMove">{{ item.toText(record[item.name]) }}
+								@mousemove="cellMouseMove">{{ item.toText(formatText(record[item.name]), item) }}
 							</td>
 						</template>
 						<td v-if="vScroller.buttonHeight < vScroller.height" class="last-col"></td>
@@ -666,6 +666,9 @@ export default {
 				if (!this.moveInputSquare(this.currentRowPos, this.currentColPos))
 					this.moveInputSquare(0, 0)
 			}
+		},
+		formatText(text, field) {
+			return field.type === 'money' ? format(text, field.moneyConfig) : field
 		},
 		reset() {
 			this.errmsg = {}

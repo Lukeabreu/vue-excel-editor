@@ -168,7 +168,7 @@
 				<div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
-						<template v-if="hasMoney">
+						<template v-if="moneyConfig">
 				              <textarea ref="inputBox"
 										v-money="moneyConfig"
 										class="input-box"
@@ -2373,8 +2373,8 @@ export default {
 		inputSquareClick() {
 			if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
 
-				this.hasMoney = (this.currentField.type === 'money' || this.currentField.type === 'quantity')
-				this.moneyConfig = this.currentField.moneyConfig
+				this.moneyConfig = (this.currentField.type === 'money' || this.currentField.type === 'quantity') ? this.currentField.moneyConfig : null
+
 				this.inputBox.value = this.currentCell.textContent
 				this.inputBoxShow = 1
 				this.inputBox.focus()

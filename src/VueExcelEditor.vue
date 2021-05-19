@@ -165,7 +165,7 @@
 					<div style="position: relative; height: 100%; padding: 2px 2px 1px">
 						<div class="rb-square"/>
 						<template>
-							<textarea v-show="isMoney"
+							<textarea v-if="isMoney"
 									  ref="moneyInputBox"
 									  v-money="moneyConfig"
 									  class="input-box"
@@ -179,7 +179,7 @@
 									  autocompitaize="off"
 									  :spellcheck="spellcheck"></textarea>
 
-							<textarea v-show="!isMoney"
+							<textarea v-else
 									  ref="inputBox"
 									  class="input-box"
 									  :style="{opacity: inputBoxShow}"

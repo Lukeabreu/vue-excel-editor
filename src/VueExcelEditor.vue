@@ -2392,7 +2392,7 @@ export default {
 		inputBoxEvent($event) {
 			if(this.currentField.type === 'money') {
 				let el = $event.target
-				let opt = options
+				let opt = this.currentField.moneyConfig ? this.currentField.moneyConfig : options
 				let positionFromEnd = el.value.length - el.selectionEnd
 				el.value = format(el.value, opt)
 				positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right

@@ -46,7 +46,14 @@ export default {
 		moneyConfig: {
 			type: Object,
 			default() {
-				return null
+				return {
+					decimal: ',',
+					thousands: '.',
+					prefix: '',
+					suffix: '',
+					precision: 2,
+					masked: false
+				}
 			}
 		},
 		toValue: {

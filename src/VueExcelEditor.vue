@@ -520,15 +520,7 @@ export default {
 			summaryRow: false,
 			summary: {},
 			showFilteredOnly: true,
-			showSelectedOnly: false,
-
-			moneyConfigDefault: {
-				decimal: '',
-				thousands: '.',
-				prefix: '',
-				precision: 0,
-				masked: false
-			}
+			showSelectedOnly: false
 		}
 		return dataset
 	},
@@ -2399,7 +2391,7 @@ export default {
 		inputBoxEvent($event) {
 			if(this.currentField.type === 'money') {
 				let el = $event.target
-				let opt = this.currentField.moneyConfig ? this.currentField.moneyConfig : this.moneyConfigDefault
+				let opt = this.currentField.moneyConfig
 				let positionFromEnd = el.value.length - el.selectionEnd
 				el.value = format(el.value, opt)
 				positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
@@ -2554,7 +2546,7 @@ export default {
 					name: field.name,
 					field: field,
 					oldVal: typeof oldVal !== 'undefined' ? oldVal : '',
-					newVal: field.type === 'money' ? unformat(newVal) :newVal,
+					newVal: field.type === 'money' ? unformat(newVal, field.moneyConfig.precision) : newVal,
 					err: ''
 				}
 

@@ -128,6 +128,7 @@ In your template
 | link           | Optional  | Function          | The function to react to the alt-click on cell text |
 | to-text        | Optional  | Function          | The function to convert from object value to edit-text |
 | to-value       | Optional  | Function          | The function to convert from edit-text to object value |
+| moneyConfig     | Optional  | Object            | Configuration for type money |
 
 @ - Function can return a promise
 
@@ -147,6 +148,7 @@ In your template
 | datetick        | unix timestamp      | yyyy-mm-dd          | left    | valid date         | none         | Y |
 | datetimetick    | unix timestamp      | yyyy-mm-dd hh:mn    | left    | valid datetime     | none         | Y |
 | datetimesectick | unix timestamp      | yyyy-mm-dd hh:mn:ss | left    | valid datetimesec  | none         | Y |
+| money           | numeric             | numeric             | right   | none               | none         | Y |
 
 ## Hot Key List
 
@@ -173,6 +175,7 @@ In your template
 | cell-focus   | {rowPos, colPos, cell, rec} | Emit when a cell got focus |
 | page-changed | pageTopPos, pageBottomPos   | Emit when the page has changed |
 | setting      | setting                     | Emit when setting (column width, invisible state) is changed |
+| text-input   | $event                      | Emit when textarea input is changed |
 
 ## Methods List
 

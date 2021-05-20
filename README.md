@@ -1,5 +1,7 @@
 # Excel Editor for VUE 2
 
+(New event (text-input) and type Money )
+
 Vue2 plugin for displaying and editing the array-of-object in Excel style. It supports the following features:
 
 - Excel-like UI

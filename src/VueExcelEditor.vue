@@ -1036,12 +1036,7 @@ export default {
 			if (key.length && key.join() !== '') return key
 			return [rec.$id]
 		},
-		getFieldByName(name) {
-			return this.fields.find(f => f.name === name)
-		},
-		getFieldByLabel(label) {
-			return this.fields.find(f => f.label === label)
-		},
+
 		/* *** Customization **************************************************************************************
      */
 		setFilter(name, filterText) {
@@ -1669,7 +1664,7 @@ export default {
 						}
 				}
 				this.value.sort((a, b) => {
-					return sorting(a, b) * -n
+					return sorting(a, b) * n
 				})
 				this.sortPos = colPos
 				this.sortDir = n
@@ -2397,7 +2392,7 @@ export default {
 				this.updateCell(recPos, field, field.toValue(setText))
 		},
 		inputBoxEvent($event) {
-			if (this.currentField.type === 'money') {
+			if(this.currentField.type === 'money') {
 				let el = $event.target
 				let opt = this.currentField.moneyConfig
 				let positionFromEnd = el.value.length - el.selectionEnd
@@ -2546,8 +2541,6 @@ export default {
 
 			row[field.name] = newVal
 
-			console.log(newVal)
-
 			setTimeout(() => {
 				const transaction = {
 					$id: row.$id,
@@ -2556,19 +2549,37 @@ export default {
 					name: field.name,
 					field: field,
 					oldVal: typeof oldVal !== 'undefined' ? oldVal : '',
-					newVal:  newVal,
-					// newVal: field.type === 'money' ? unformat(newVal, field.moneyConfig.precision) : newVal,
+					newVal: field.type === 'money' ? unformat(newVal, field.moneyConfig.precision) : newVal,
 					err: ''
 				}
 
+				const id = `id-${row.$id}-${field.name}`
 				if (field.validate !== null) transaction.err = field.validate(newVal, oldVal, row, field)
 				if (field.mandatory && newVal === '')
 					transaction.err += (transaction.err ? '\n' : '') + field.mandatory
-				this.setFieldError(transaction.err, row, field)
+
+				if (transaction.err) {
+					this.errmsg[id] = transaction.err
+					const selector = this.systable.querySelector('td#' + id)
+					if (selector) selector.classList.add('error')
+				} else if (this.errmsg[id]) {
+					delete this.errmsg[id]
+					const selector = this.systable.querySelector('td#' + id)
+					if (selector) selector.classList.remove('error')
+				}
 
 				if (this.validate !== null) {
+					const rid = `rid-${row.$id}`
 					transaction.rowerr = this.validate(newVal, oldVal, row, field)
-					this.setRowError(transaction.rowerr, row)
+					if (transaction.rowerr) {
+						this.rowerr[rid] = transaction.rowerr
+						const selector = this.systable.querySelector('td#' + rid)
+						if (selector) selector.classList.add('error')
+					} else if (this.rowerr[rid]) {
+						delete this.rowerr[rid]
+						const selector = this.systable.querySelector('td#' + rid)
+						if (selector) selector.classList.remove('error')
+					}
 				}
 
 				if (field.summary)
@@ -2586,32 +2597,6 @@ export default {
 				Object.keys(this.selected).forEach(recPos => this.updateCell(parseInt(recPos), field, content))
 				this.processing = false
 			}, 0)
-		},
-		setFieldError(error, row, field) {
-			const id = `id-${row.$id}-${field.name}`
-			const selector = this.systable.querySelector('td#' + id)
-			if (error) {
-				this.errmsg[id] = error
-				this.$emit('validate-error', error, row, field)
-				if (selector) selector.classList.add('error')
-			} else if (this.errmsg[id]) {
-				delete this.errmsg[id]
-				this.$emit('validate-error', '', row, field)
-				if (selector) selector.classList.remove('error')
-			}
-		},
-		setRowError(error, row) {
-			const rid = `rid-${row.$id}`
-			const selector = this.systable.querySelector('td#' + rid)
-			if (error) {
-				this.rowerr[rid] = error
-				this.$emit('validate-error', error, row)
-				if (selector) selector.classList.add('error')
-			} else if (this.rowerr[rid]) {
-				delete this.rowerr[rid]
-				this.$emit('validate-error', '', row)
-				if (selector) selector.classList.remove('error')
-			}
 		},
 
 		/* *** Autocomplete ****************************************************************************************

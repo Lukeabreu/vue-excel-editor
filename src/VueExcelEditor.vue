@@ -2546,6 +2546,8 @@ export default {
 
 			row[field.name] = newVal
 
+			console.log(newVal)
+
 			setTimeout(() => {
 				const transaction = {
 					$id: row.$id,
@@ -2554,7 +2556,8 @@ export default {
 					name: field.name,
 					field: field,
 					oldVal: typeof oldVal !== 'undefined' ? oldVal : '',
-					newVal: field.type === 'money' ? unformat(newVal, field.moneyConfig.precision) : newVal,
+					newVal:  newVal,
+					// newVal: field.type === 'money' ? unformat(newVal, field.moneyConfig.precision) : newVal,
 					err: ''
 				}
 

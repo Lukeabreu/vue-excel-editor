@@ -6,6 +6,7 @@
 import moment from 'moment'
 
 export default {
+	name: 'VueExcelColumn',
 	props: {
 		field: {type: String, default: ''},
 		label: {type: String, default: null},

@@ -49,6 +49,7 @@
 import draggable from 'vuedraggable'
 
 export default {
+	name: 'PanelSetting',
   components: {
     'draggable': draggable
   },

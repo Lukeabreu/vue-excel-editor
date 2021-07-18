@@ -321,12 +321,13 @@ import 'vue2-datepicker/index.css'
 import {format, setCursor, event, unformat} from './utils'
 
 export default {
+	name: 'VueExcelEditor',
 	components: {
-		'vue-excel-filter': VueExcelFilter,
-		'panel-filter': PanelFilter,
-		'panel-setting': PanelSetting,
-		'panel-find': PanelFind,
-		'date-picker': DatePicker
+		VueExcelFilter,
+		PanelFilter,
+		PanelSetting,
+		PanelFind,
+		DatePicker
 	},
 	props: {
 		disablePanelSetting: {
@@ -1036,10 +1037,10 @@ export default {
 			if (key.length && key.join() !== '') return key
 			return [rec.$id]
 		},
-		getFieldByName (name) {
+		getFieldByName(name) {
 			return this.fields.find(f => f.name === name)
 		},
-		getFieldByLabel (label) {
+		getFieldByLabel(label) {
 			return this.fields.find(f => f.label === label)
 		},
 		/* *** Customization **************************************************************************************
@@ -1630,53 +1631,53 @@ export default {
 
 		/* *** Sort *******************************************************************************************
      */
-    headerClick (e, colPos) {
-      if(!this.noHeaderEdit && e.target.tagName === 'SPAN') {
-        e.target.contentEditable = true
-        e.target.addEventListener('focusout', this.completeHeaderChange)
-        return
-      }
-      if (e.which === 1) {
-        e.preventDefault()
-        if (this.sortPos === colPos && this.sortDir > 0)
-          this.sort(-1, colPos)
-        else
-          this.sort(1, colPos)
-      }
-    },
-    completeHeaderChange (e) {
-      const th = e.target.parentElement.parentElement
-      const index = Array.from(th.parentElement.children).findIndex(v => v === th)
-      this.fields[index - 1].label = e.target.textContent
-    },
-    sort (n, pos) {
-      this.processing = true
-      const colPos = typeof pos === 'undefined' ? this.columnFilterRef.colPos : pos
-      const field = this.fields[colPos]
-      const name = field.name
-      setTimeout(() => {
-        let sorting = field.sort
-        if (sorting === null) {
-          if (field.type === 'number')
-            sorting = (a, b) => {
-              if (Number(a[name]) > Number(b[name])) return 1
-              if (Number(a[name]) < Number(b[name])) return -1
-              return 0
-            }
-          else
-              sorting = (a, b) => {
-                return String(a[name]).localeCompare(String(b[name]))
-              }
-        }
-        this.value.sort((a, b) => {
-          return sorting(a, b) * -n
-        })
-        this.sortPos = colPos
-        this.sortDir = n
-        this.$forceUpdate()
-        this.processing = false
-      }, 0)
-    },
+		headerClick(e, colPos) {
+			if (!this.noHeaderEdit && e.target.tagName === 'SPAN') {
+				e.target.contentEditable = true
+				e.target.addEventListener('focusout', this.completeHeaderChange)
+				return
+			}
+			if (e.which === 1) {
+				e.preventDefault()
+				if (this.sortPos === colPos && this.sortDir > 0)
+					this.sort(-1, colPos)
+				else
+					this.sort(1, colPos)
+			}
+		},
+		completeHeaderChange(e) {
+			const th = e.target.parentElement.parentElement
+			const index = Array.from(th.parentElement.children).findIndex(v => v === th)
+			this.fields[index - 1].label = e.target.textContent
+		},
+		sort(n, pos) {
+			this.processing = true
+			const colPos = typeof pos === 'undefined' ? this.columnFilterRef.colPos : pos
+			const field = this.fields[colPos]
+			const name = field.name
+			setTimeout(() => {
+				let sorting = field.sort
+				if (sorting === null) {
+					if (field.type === 'number')
+						sorting = (a, b) => {
+							if (Number(a[name]) > Number(b[name])) return 1
+							if (Number(a[name]) < Number(b[name])) return -1
+							return 0
+						}
+					else
+						sorting = (a, b) => {
+							return String(a[name]).localeCompare(String(b[name]))
+						}
+				}
+				this.value.sort((a, b) => {
+					return sorting(a, b) * -n
+				})
+				this.sortPos = colPos
+				this.sortDir = n
+				this.$forceUpdate()
+				this.processing = false
+			}, 0)
+		},
 
 		/* *** Paging *******************************************************************************************
      */
@@ -2397,7 +2398,7 @@ export default {
 				this.updateCell(recPos, field, field.toValue(setText))
 		},
 		inputBoxEvent($event) {
-			if(this.currentField.type === 'money') {
+			if (this.currentField.type === 'money') {
 				let el = $event.target
 				let opt = this.currentField.moneyConfig
 				let positionFromEnd = el.value.length - el.selectionEnd
@@ -2558,62 +2559,58 @@ export default {
 					err: ''
 				}
 
-        if (field.validate !== null) transaction.err = field.validate(newVal, oldVal, row, field)
-        if (field.mandatory && newVal === '')
-          transaction.err += (transaction.err ? '\n' : '') + field.mandatory
-        this.setFieldError(transaction.err, row, field)
+				if (field.validate !== null) transaction.err = field.validate(newVal, oldVal, row, field)
+				if (field.mandatory && newVal === '')
+					transaction.err += (transaction.err ? '\n' : '') + field.mandatory
+				this.setFieldError(transaction.err, row, field)
 
-        if (this.validate !== null) {
-          transaction.rowerr = this.validate(newVal, oldVal, row, field)
-          this.setRowError(transaction.rowerr, row)
-        }
+				if (this.validate !== null) {
+					transaction.rowerr = this.validate(newVal, oldVal, row, field)
+					this.setRowError(transaction.rowerr, row)
+				}
 
 				if (field.summary)
 					this.calSummary(field.name)
 
-        this.lazy(transaction, (buf) => {
-          this.$emit('update', buf)
-          if (!isUndo) this.redo.push(buf)
-        }, 50)
-      })
-    },
-    updateSelectedRows (field, content) {
-      this.processing = true
-      setTimeout(() => {
-        Object.keys(this.selected).forEach(recPos => this.updateCell(parseInt(recPos), field, content))
-        this.processing = false
-      }, 0)
-    },
-    setFieldError (error, row, field) {
-      const id = `id-${row.$id}-${field.name}`
-      const selector = this.systable.querySelector('td#'+id)
-      if (error) {
-        this.errmsg[id] = error
-        this.$emit('validate-error', error, row, field)
-        if (selector) selector.classList.add('error')
-      }
-      else
-      if (this.errmsg[id]) {
-        delete this.errmsg[id]
-        this.$emit('validate-error', '', row, field)
-        if (selector) selector.classList.remove('error')
-      }
-    },
-    setRowError (error, row) {
-      const rid = `rid-${row.$id}`
-      const selector = this.systable.querySelector('td#'+rid)
-      if (error) {
-        this.rowerr[rid] = error
-        this.$emit('validate-error', error, row)
-        if (selector) selector.classList.add('error')
-      }
-      else
-      if (this.rowerr[rid]) {
-        delete this.rowerr[rid]
-        this.$emit('validate-error', '', row)
-        if (selector) selector.classList.remove('error')
-      }
-    },
+				this.lazy(transaction, (buf) => {
+					this.$emit('update', buf)
+					if (!isUndo) this.redo.push(buf)
+				}, 50)
+			})
+		},
+		updateSelectedRows(field, content) {
+			this.processing = true
+			setTimeout(() => {
+				Object.keys(this.selected).forEach(recPos => this.updateCell(parseInt(recPos), field, content))
+				this.processing = false
+			}, 0)
+		},
+		setFieldError(error, row, field) {
+			const id = `id-${row.$id}-${field.name}`
+			const selector = this.systable.querySelector('td#' + id)
+			if (error) {
+				this.errmsg[id] = error
+				this.$emit('validate-error', error, row, field)
+				if (selector) selector.classList.add('error')
+			} else if (this.errmsg[id]) {
+				delete this.errmsg[id]
+				this.$emit('validate-error', '', row, field)
+				if (selector) selector.classList.remove('error')
+			}
+		},
+		setRowError(error, row) {
+			const rid = `rid-${row.$id}`
+			const selector = this.systable.querySelector('td#' + rid)
+			if (error) {
+				this.rowerr[rid] = error
+				this.$emit('validate-error', error, row)
+				if (selector) selector.classList.add('error')
+			} else if (this.rowerr[rid]) {
+				delete this.rowerr[rid]
+				this.$emit('validate-error', '', row)
+				if (selector) selector.classList.remove('error')
+			}
+		},
 
 		/* *** Autocomplete ****************************************************************************************
      */
